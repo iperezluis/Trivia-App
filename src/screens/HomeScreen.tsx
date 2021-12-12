@@ -1,26 +1,48 @@
-import React from 'react';
-import {View, Text} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {StackScreenProps} from '@react-navigation/stack';
+import React, {useState} from 'react';
+import {View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {UsuarioStackParams} from '../../navigation/StackNavigator';
 
-// const menuItem = [
-//   {
-//     name: 'Animation 101',
-//     icon: 'cube-outline',
-//     components: 'Animation101Screen',
-//   },
-// ];
-// const calculatorVector = (a: number, b: number) => {
-//   Math.floor(Math.sqrt(Math.pow(a - b, 2) - Math.pow(a + b, 2)));
-//   if (a typeof  Number) {
-//     console.log('error');
-//   }else{}
-// };
-// calculatorVector(4, 2);
-export const HomeScreen = () => {
+interface Props extends StackScreenProps<any, 'HomeScreen'> {
+  usuario: Usuario;
+}
+interface Usuario {
+  name: string | undefined;
+}
+
+const HomeScreen = ({navigation, usuario}: Props) => {
+  const [name, setName] = useState<string>();
+  const userPLay = (name: string|undefined) => {
+    if (!name) {
+      return Alert.alert('Error', 'Los campos estan vacios');
+    }
+    navigation.navigate('QuestionScreen', {
+       usuario: name,
+    });
+  };
   return (
-    <View>
-      <Text>Home</Text>
-      <Icon name="start-outline" size={50} color="black" />
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Usuario</Text>
+      <TextInput
+        underlineColorAndroid="black"
+        placeholder="inserte usuario"
+        onChangeText={value => setName(value)}
+        value={name}
+      />
+      <TouchableOpacity
+        style={{
+          width: 100,
+          height: 100,
+          borderRadius: 5,
+          backgroundColor: 'red',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onPress={() => userPLay(name)}>
+        <Text style={{color: 'white'}}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+
+export default HomeScreen;
